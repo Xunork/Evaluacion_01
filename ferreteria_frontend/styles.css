@@ -1,14 +1,14 @@
 :root {
-  --primary: #1e5f74;
-  --primary-dark: #164559;
-  --accent: #f59e0b;
-  --bg: #f4f8fb;
+  --primary: #b91c1c;
+  --primary-dark: #7f1d1d;
+  --accent: #ef4444;
+  --bg: #fff5f5;
   --card: #ffffff;
   --text: #1f2937;
   --muted: #6b7280;
   --danger: #dc2626;
   --success: #16a34a;
-  --shadow: 0 10px 25px rgba(17, 24, 39, 0.08);
+  --shadow: 0 10px 25px rgba(120, 23, 23, 0.12);
 }
 
 * {
@@ -18,7 +18,7 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #edf7ff, #fef3c7);
+  background: linear-gradient(135deg, #fff1f2, #fef2f2);
   color: var(--text);
 }
 
@@ -88,7 +88,7 @@ textarea {
 }
 
 .role-btn.active {
-  background: var(--primary);
+  background: linear-gradient(135deg, var(--primary), var(--accent));
   color: white;
   font-weight: bold;
 }
@@ -187,8 +187,8 @@ textarea {
 }
 
 .nav-btn.active {
-  background: var(--accent);
-  color: #1f2937;
+  background: linear-gradient(135deg, #fecaca, #fca5a5);
+  color: #7f1d1d;
   font-weight: bold;
 }
 
@@ -250,7 +250,7 @@ main {
 }
 
 .card-header {
-  background: linear-gradient(135deg, #dbeefc, #fef3c7);
+  background: linear-gradient(135deg, #fee2e2, #fecaca);
   padding: 18px 16px;
 }
 
