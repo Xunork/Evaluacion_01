@@ -16,22 +16,18 @@
           </div>
 
           <div class="role-selection">
-            <button class="role-btn active" data-role="admin">Administrador</button>
-            <button class="role-btn" data-role="cliente">Cliente</button>
+            <button id="admin-login-btn" class="role-btn active" type="button">Entrar como administrador</button>
+            <button id="client-view-btn" class="role-btn" type="button">Ver catálogo</button>
           </div>
 
           <form id="login-form">
-            <label for="username">Usuario</label>
-            <input id="username" type="text" placeholder="admin o cliente" required />
-
-            <label for="password">Contraseña</label>
-            <input id="password" type="password" placeholder="Ingresa tu contraseña" required />
+            <label for="password">Contraseña del administrador</label>
+            <input id="password" type="password" placeholder="Ingrese la contraseña" required />
 
             <button type="submit" class="primary-btn">Ingresar</button>
           </form>
 
-          <p class="hint">Administrador: admin / admin123</p>
-          <p class="hint">Cliente: cliente / cliente123</p>
+          <p class="hint">Contraseña admin: admin123</p>
         </div>
       </div>
 

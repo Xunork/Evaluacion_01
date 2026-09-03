@@ -7,6 +7,8 @@ const state = {
   selectedRole: 'admin'
 };
 
+const ADMIN_PASSWORD = 'admin123';
+
 const loginScreen = document.getElementById('login-screen');
 const dashboardScreen = document.getElementById('dashboard-screen');
 const productList = document.getElementById('product-list');
@@ -57,33 +59,40 @@ async function loadUsersAndProducts() {
 }
 
 function bindEvents() {
-  roleButtons.forEach((button) => {
-    button.addEventListener('click', () => {
-      roleButtons.forEach((btn) => btn.classList.toggle('active', btn === button));
-      state.selectedRole = button.dataset.role;
-    });
+  const adminLoginBtn = document.getElementById('admin-login-btn');
+  const clientViewBtn = document.getElementById('client-view-btn');
+
+  adminLoginBtn.addEventListener('click', () => {
+    state.selectedRole = 'admin';
+    roleButtons.forEach((btn) => btn.classList.toggle('active', btn === adminLoginBtn));
+    document.getElementById('password').focus();
+  });
+
+  clientViewBtn.addEventListener('click', () => {
+    state.selectedRole = 'cliente';
+    roleButtons.forEach((btn) => btn.classList.toggle('active', btn === clientViewBtn));
+    state.currentUser = { username: 'cliente', role: 'cliente', name: 'Cliente' };
+    loginScreen.classList.remove('active');
+    dashboardScreen.classList.add('active');
+    userBadge.textContent = 'Cliente';
+    renderLayout();
   });
 
   loginForm.addEventListener('submit', (event) => {
     event.preventDefault();
-    const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value.trim();
 
-    const user = state.users.find(
-      (u) => u.username === username && u.password === password
-    );
-
-    if (!user) {
-      alert('Credenciales incorrectas. Verifica usuario y contraseña.');
+    if (password !== ADMIN_PASSWORD) {
+      alert('Contraseña incorrecta. Solo el administrador puede ingresar.');
       return;
     }
 
-    state.currentUser = user;
-    state.selectedRole = user.role;
-    roleButtons.forEach((btn) => btn.classList.toggle('active', btn.dataset.role === user.role));
+    state.currentUser = { username: 'admin', role: 'admin', name: 'Administrador' };
+    state.selectedRole = 'admin';
+    roleButtons.forEach((btn) => btn.classList.toggle('active', btn === adminLoginBtn));
     loginScreen.classList.remove('active');
     dashboardScreen.classList.add('active');
-    userBadge.textContent = user.name;
+    userBadge.textContent = 'Administrador';
     renderLayout();
   });
 
@@ -92,11 +101,12 @@ function bindEvents() {
 
   logoutBtn.addEventListener('click', () => {
     state.currentUser = null;
+    state.selectedRole = 'admin';
     dashboardScreen.classList.remove('active');
     loginScreen.classList.add('active');
     loginForm.reset();
     document.getElementById('password').value = '';
-    document.getElementById('username').value = '';
+    roleButtons.forEach((btn) => btn.classList.toggle('active', btn.id === 'admin-login-btn'));
   });
 
   productForm.addEventListener('submit', (event) => {
