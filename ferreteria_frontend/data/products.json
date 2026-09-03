@@ -1,0 +1,22 @@
+[
+  {"id": 1, "name": "Taladro Bosch", "category": "Herramienta eléctrica", "price": 189990, "stock": 12, "description": "Taladro percutor de 650W ideal para trabajos de carpintería y construcción."},
+  {"id": 2, "name": "Sierra circular", "category": "Herramienta eléctrica", "price": 229990, "stock": 8, "description": "Sierra circular para cortes precisos en madera y materiales ligeros."},
+  {"id": 3, "name": "Martillo de carpintero", "category": "Herramienta manual", "price": 24990, "stock": 20, "description": "Martillo con cabeza de acero y mango ergonómico para uso diario."},
+  {"id": 4, "name": "Llave inglesa 10\"", "category": "Herramienta manual", "price": 18990, "stock": 15, "description": "Llave ajustable para trabajos mecánicos y de mantenimiento general."},
+  {"id": 5, "name": "Cinta métrica 5m", "category": "Medición", "price": 12990, "stock": 30, "description": "Cinta de medición resistente con cuerpo y bloqueo para trabajo preciso."},
+  {"id": 6, "name": "Taladro atornillador", "category": "Herramienta eléctrica", "price": 159990, "stock": 7, "description": "Atornillador inalámbrico con batería recargable y accesorios incluidos."},
+  {"id": 7, "name": "Serrucho de metal", "category": "Herramienta manual", "price": 21990, "stock": 18, "description": "Serrucho para cortes de metales y perfiles finos."},
+  {"id": 8, "name": "Pintura látex blanco", "category": "Pinturas", "price": 18990, "stock": 14, "description": "Pintura látex de alta cobertura para interiores y exteriores."},
+  {"id": 9, "name": "Brocha 4\"", "category": "Pinturas", "price": 6990, "stock": 21, "description": "Brocha para enmascarar y aplicar pintura en superficies medianas."},
+  {"id": 10, "name": "Rodillo 9\"", "category": "Pinturas", "price": 8990, "stock": 26, "description": "Rodillo de fibras medias ideal para paredes y techos."},
+  {"id": 11, "name": "Lija de grano 120", "category": "Acabados", "price": 2990, "stock": 35, "description": "Papel abrasivo de alta resistencia para lijado de madera y metal."},
+  {"id": 12, "name": "Pegamento instantáneo", "category": "Adhesivos", "price": 4990, "stock": 22, "description": "Pegamento de alta resistencia para materiales de uso doméstico."},
+  {"id": 13, "name": "Cemento 25kg", "category": "Construcción", "price": 12990, "stock": 9, "description": "Bolsa de cemento para trabajos de albañilería y reparaciones estructurales."},
+  {"id": 14, "name": "Arena fina 20kg", "category": "Construcción", "price": 8990, "stock": 10, "description": "Arena fina para mezclas y acabados de construcción ligera."},
+  {"id": 15, "name": "Cable eléctrico 2.5mm", "category": "Electricidad", "price": 3490, "stock": 41, "description": "Cable tripolar para instalaciones eléctricas residenciales y comerciales."},
+  {"id": 16, "name": "Interruptor simple", "category": "Electricidad", "price": 4990, "stock": 33, "description": "Interruptor de pared para uso doméstico y comercial."},
+  {"id": 17, "name": "Tubo PVC 1/2\"", "category": "Plomería", "price": 1290, "stock": 52, "description": "Tubo de PVC para instalación de agua y desagües ligeros."},
+  {"id": 18, "name": "Llave de paso", "category": "Plomería", "price": 7990, "stock": 17, "description": "Llave de paso para controlar el flujo de agua y evitar fugas."},
+  {"id": 19, "name": "Mango para escoba", "category": "Limpieza", "price": 3990, "stock": 0, "description": "Mango reforzado para escobas y herramientas de limpieza."},
+  {"id": 20, "name": "Escalera de aluminio", "category": "Seguridad", "price": 89990, "stock": 4, "description": "Escalera plegable con baranda para trabajos de altura seguros."}
+]
