@@ -14,9 +14,18 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
+from django.views.static import serve
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', RedirectView.as_view(url='/ferreteria_frontend/index.html', permanent=False)),
+    re_path(
+        r'^ferreteria_frontend/(?P<path>.*)$',
+        serve,
+        {'document_root': settings.BASE_DIR / 'ferreteria_frontend'},
+    ),
 ]

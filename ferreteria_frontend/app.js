@@ -1,4 +1,4 @@
-const STORAGE_KEY = 'ferreteria_products_v1';
+const STORAGE_KEY = 'ferreteria_products_v2';
 
 const state = {
   products: [],
@@ -6,8 +6,6 @@ const state = {
   currentUser: null,
   selectedRole: 'admin'
 };
-
-const ADMIN_PASSWORD = 'admin123';
 
 const loginScreen = document.getElementById('login-screen');
 const dashboardScreen = document.getElementById('dashboard-screen');
@@ -48,13 +46,8 @@ async function loadUsersAndProducts() {
       : productsData;
   } catch (error) {
     console.error('Error cargando datos:', error);
-    state.users = [
-      { username: 'admin', password: 'admin123', role: 'admin', name: 'Administrador' },
-      { username: 'cliente', password: 'cliente123', role: 'cliente', name: 'Cliente' }
-    ];
-    state.products = [
-      { id: 1, name: 'Taladro', category: 'Herramienta', price: 150000, stock: 5, description: 'Taladro de uso general.' }
-    ];
+    state.users = [];
+    state.products = [];
   }
 }
 
@@ -71,7 +64,11 @@ function bindEvents() {
   clientViewBtn.addEventListener('click', () => {
     state.selectedRole = 'cliente';
     roleButtons.forEach((btn) => btn.classList.toggle('active', btn === clientViewBtn));
-    state.currentUser = { username: 'cliente', role: 'cliente', name: 'Cliente' };
+    state.currentUser = state.users.find((user) => user.role === 'cliente');
+    if (!state.currentUser) {
+      alert('No se encontró el perfil cliente en users.json.');
+      return;
+    }
     loginScreen.classList.remove('active');
     dashboardScreen.classList.add('active');
     userBadge.textContent = 'Cliente';
@@ -81,13 +78,16 @@ function bindEvents() {
   loginForm.addEventListener('submit', (event) => {
     event.preventDefault();
     const password = document.getElementById('password').value.trim();
+    const adminUser = state.users.find(
+      (user) => user.role === 'admin' && user.password === password
+    );
 
-    if (password !== ADMIN_PASSWORD) {
+    if (!adminUser) {
       alert('Contraseña incorrecta. Solo el administrador puede ingresar.');
       return;
     }
 
-    state.currentUser = { username: 'admin', role: 'admin', name: 'Administrador' };
+    state.currentUser = adminUser;
     state.selectedRole = 'admin';
     roleButtons.forEach((btn) => btn.classList.toggle('active', btn === adminLoginBtn));
     loginScreen.classList.remove('active');
