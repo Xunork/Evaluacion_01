@@ -9,25 +9,40 @@
   <body>
     <div id="app">
       <div id="login-screen" class="screen active">
-        <div class="login-card">
-          <div class="brand">
-            <span class="brand-icon">🔧</span>
-            <h1>Ferretería El Tornillo Fuerte</h1>
+        <div class="landing-page">
+          <div class="landing-copy">
+            <p class="landing-kicker">Ferretería local · Catálogo online</p>
+            <div class="landing-mark">🔧</div>
+            <h1>Todo lo que necesitas para construir.</h1>
+            <p class="landing-lead">Herramientas, materiales y accesorios listos para tus próximos proyectos.</p>
+            <div class="landing-categories">
+              <span>Herramientas</span>
+              <span>Construcción</span>
+              <span>Electricidad</span>
+              <span>Seguridad</span>
+            </div>
           </div>
 
-          <div class="role-selection">
-            <button id="admin-login-btn" class="role-btn active" type="button">Entrar como administrador</button>
-            <button id="client-view-btn" class="role-btn" type="button">Ver catálogo</button>
+          <div class="login-card">
+            <div class="brand">
+              <h2>El Tornillo Fuerte</h2>
+              <p>Ingresa para continuar</p>
+            </div>
+
+            <div class="role-selection">
+              <button id="admin-login-btn" class="role-btn active" type="button">Administrador</button>
+              <button id="client-view-btn" class="role-btn" type="button">Ver catálogo</button>
+            </div>
+
+            <form id="login-form">
+              <label for="password">Contraseña del administrador</label>
+              <input id="password" type="password" placeholder="Ingrese la contraseña" required />
+
+              <button type="submit" class="primary-btn">Ingresar</button>
+            </form>
+
+            <p class="hint">El cliente puede entrar directamente al catálogo.</p>
           </div>
-
-          <form id="login-form">
-            <label for="password">Contraseña del administrador</label>
-            <input id="password" type="password" placeholder="Ingrese la contraseña" required />
-
-            <button type="submit" class="primary-btn">Ingresar</button>
-          </form>
-
-          <p class="hint">Contraseña admin: admin123</p>
         </div>
       </div>
 
@@ -39,6 +54,7 @@
           </div>
           <div class="topbar-actions">
             <span id="user-badge" class="badge">Cliente</span>
+            <span id="cart-badge" class="badge">Carrito: 0</span>
             <button id="logout-btn" class="secondary-btn">Cerrar sesión</button>
           </div>
         </header>
@@ -64,7 +80,25 @@
                 <strong id="summary-empty">0</strong>
               </div>
             </div>
-            <div id="product-list" class="product-grid"></div>
+            <div class="catalog-layout">
+              <div id="product-list" class="product-grid"></div>
+              <aside class="cart-panel">
+                <div class="cart-heading">
+                  <h3>Tu carrito</h3>
+                  <span id="cart-item-count">0 productos</span>
+                </div>
+                <div id="cart-list" class="cart-list">
+                  <p class="empty-cart">Aún no agregas productos.</p>
+                </div>
+                <div class="cart-total">
+                  <span>Total</span>
+                  <strong id="cart-total-price">$0</strong>
+                </div>
+                <button id="checkout-btn" class="primary-btn" type="button" disabled>
+                  Comprar carrito
+                </button>
+              </aside>
+            </div>
           </section>
 
           <section id="admin-section" class="panel">

@@ -4,12 +4,18 @@ const state = {
   products: [],
   users: [],
   currentUser: null,
-  selectedRole: 'admin'
+  selectedRole: 'admin',
+  cart: []
 };
 
 const loginScreen = document.getElementById('login-screen');
 const dashboardScreen = document.getElementById('dashboard-screen');
 const productList = document.getElementById('product-list');
+const cartList = document.getElementById('cart-list');
+const cartBadge = document.getElementById('cart-badge');
+const cartItemCount = document.getElementById('cart-item-count');
+const cartTotalPrice = document.getElementById('cart-total-price');
+const checkoutBtn = document.getElementById('checkout-btn');
 const adminProductList = document.getElementById('admin-product-list');
 const adminTab = document.getElementById('admin-tab');
 const catalogTab = document.getElementById('catalog-tab');
@@ -24,6 +30,7 @@ async function init() {
   await loadUsersAndProducts();
   bindEvents();
   renderProducts();
+  renderCart();
   updateSummary();
   loginScreen.classList.add('active');
 }
@@ -145,6 +152,8 @@ function bindEvents() {
   });
 
   resetFormBtn.addEventListener('click', resetProductForm);
+
+  checkoutBtn.addEventListener('click', checkoutCart);
 }
 
 function renderLayout() {
@@ -156,6 +165,7 @@ function renderLayout() {
   } else {
     showPanel('catalog');
   }
+  renderProducts();
 }
 
 function showPanel(panelName) {
@@ -186,18 +196,131 @@ function renderProducts() {
         <div class="stock ${product.stock > 0 ? 'available' : 'zero'}">
           ${product.stock > 0 ? `Disponible: ${product.stock} unidades` : 'Sin stock'}
         </div>
+        <button class="buy-btn" data-id="${product.id}" ${getCartQuantity(product.id) >= product.stock ? 'disabled' : ''}>
+          ${product.stock > 0 ? 'Agregar al carrito' : 'Agotado'}
+        </button>
       </div>
     `;
+
+    const buyButton = article.querySelector('.buy-btn');
+    buyButton.addEventListener('click', () => addToCart(product.id));
     productList.appendChild(article);
   });
 
   updateSummary();
+  renderCart();
 
   if (state.currentUser && state.currentUser.role === 'admin') {
     renderAdminProducts();
   } else {
     adminProductList.innerHTML = '';
   }
+}
+
+function addToCart(productId) {
+  const product = state.products.find((item) => item.id === productId);
+  if (!product || getCartQuantity(productId) >= product.stock) {
+    alert('Este producto está agotado.');
+    return;
+  }
+
+  const cartItem = state.cart.find((item) => item.id === productId);
+  if (cartItem) {
+    cartItem.quantity += 1;
+  } else {
+    state.cart.push({ id: productId, quantity: 1 });
+  }
+  renderProducts();
+}
+
+function getCartQuantity(productId) {
+  return state.cart.find((item) => item.id === productId)?.quantity || 0;
+}
+
+function renderCart() {
+  const validItems = state.cart.filter((item) => state.products.some((product) => product.id === item.id));
+  state.cart = validItems;
+  const totalItems = state.cart.reduce((sum, item) => sum + item.quantity, 0);
+  const totalPrice = state.cart.reduce((sum, item) => {
+    const product = state.products.find((itemProduct) => itemProduct.id === item.id);
+    return sum + (product ? product.price * item.quantity : 0);
+  }, 0);
+
+  cartBadge.textContent = `Carrito: ${totalItems}`;
+  cartItemCount.textContent = `${totalItems} ${totalItems === 1 ? 'producto' : 'productos'}`;
+  cartTotalPrice.textContent = `$${formatPrice(totalPrice)}`;
+  checkoutBtn.disabled = state.cart.length === 0;
+  cartList.innerHTML = '';
+
+  if (state.cart.length === 0) {
+    cartList.innerHTML = '<p class="empty-cart">Aún no agregas productos.</p>';
+    return;
+  }
+
+  state.cart.forEach((item) => {
+    const product = state.products.find((itemProduct) => itemProduct.id === item.id);
+    const cartRow = document.createElement('div');
+    cartRow.className = 'cart-item';
+    cartRow.innerHTML = `
+      <div>
+        <strong>${product.name}</strong>
+        <span>$${formatPrice(product.price * item.quantity)}</span>
+      </div>
+      <div class="cart-controls">
+        <button class="quantity-btn" data-action="decrease" data-id="${product.id}" type="button">−</button>
+        <span>${item.quantity}</span>
+        <button class="quantity-btn" data-action="increase" data-id="${product.id}" type="button" ${item.quantity >= product.stock ? 'disabled' : ''}>+</button>
+        <button class="remove-cart-btn" data-id="${product.id}" type="button">Quitar</button>
+      </div>
+    `;
+    cartRow.querySelector('[data-action="decrease"]').addEventListener('click', () => changeCartQuantity(product.id, -1));
+    cartRow.querySelector('[data-action="increase"]').addEventListener('click', () => changeCartQuantity(product.id, 1));
+    cartRow.querySelector('.remove-cart-btn').addEventListener('click', () => removeFromCart(product.id));
+    cartList.appendChild(cartRow);
+  });
+}
+
+function changeCartQuantity(productId, amount) {
+  const cartItem = state.cart.find((item) => item.id === productId);
+  const product = state.products.find((item) => item.id === productId);
+  if (!cartItem || !product) return;
+
+  const nextQuantity = cartItem.quantity + amount;
+  if (nextQuantity <= 0) {
+    removeFromCart(productId);
+    return;
+  }
+  if (nextQuantity > product.stock) return;
+  cartItem.quantity = nextQuantity;
+  renderProducts();
+}
+
+function removeFromCart(productId) {
+  state.cart = state.cart.filter((item) => item.id !== productId);
+  renderProducts();
+}
+
+function checkoutCart() {
+  if (state.cart.length === 0) return;
+
+  const unavailable = state.cart.find((item) => {
+    const product = state.products.find((itemProduct) => itemProduct.id === item.id);
+    return !product || item.quantity > product.stock;
+  });
+  if (unavailable) {
+    alert('Uno de los productos ya no tiene suficiente stock. Revisa tu carrito.');
+    return;
+  }
+
+  const total = state.cart.reduce((sum, item) => {
+    const product = state.products.find((itemProduct) => itemProduct.id === item.id);
+    product.stock -= item.quantity;
+    return sum + (product.price * item.quantity);
+  }, 0);
+  state.cart = [];
+  saveProducts();
+  renderProducts();
+  alert(`Compra realizada. Total: $${formatPrice(total)}`);
 }
 
 function renderAdminProducts() {
