@@ -47,9 +47,15 @@ async function loadUsersAndProducts() {
 
     state.users = usersData.users;
 
-    const savedProducts = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
-    state.products = savedProducts && Array.isArray(savedProducts) && savedProducts.length
-      ? savedProducts
+    const storedProducts = localStorage.getItem(STORAGE_KEY);
+    const savedProducts = storedProducts === null ? null : JSON.parse(storedProducts);
+    state.products = Array.isArray(savedProducts)
+      ? savedProducts.map((savedProduct) => {
+        const catalogProduct = productsData.find((product) => product.id === savedProduct.id);
+        return catalogProduct?.image && !savedProduct.image
+          ? { ...savedProduct, image: catalogProduct.image }
+          : savedProduct;
+      })
       : productsData;
   } catch (error) {
     console.error('Error cargando datos:', error);
@@ -226,7 +232,7 @@ function renderProducts() {
 }
 
 function getProductImage(product) {
-  const imageFiles = {
+  const legacyImageFiles = {
     'Taladro Bosch': 'Taladro Bosch.jpeg',
     'Sierra circular': 'Cierra Circular.jpeg',
     'Martillo de carpintero': 'Martillo de Carpintero.jpeg',
@@ -268,10 +274,27 @@ function getProductImage(product) {
     'Sierra de mano': 'sierra de mano.jpeg',
     'Mécate de nylon': 'mecate de nylon.jpeg'
   };
-  if (imageFiles[product.name]) {
-    return `./data/product_images/${encodeURIComponent(imageFiles[product.name])}`;
+  const normalizedName = normalizeProductName(product.name);
+  const imageFile = product.image || Object.entries(legacyImageFiles).find(
+    ([productName]) => normalizeProductName(productName) === normalizedName
+  )?.[1];
+
+  if (imageFile) {
+    const imagePath = `data/product_images/${encodeURIComponent(imageFile)}`;
+    return new URL(imagePath, document.baseURI).href;
   }
   return getFallbackImage(product);
+}
+
+function normalizeProductName(name) {
+  return name
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/cierra/g, 'sierra')
+    .replace(/llava/g, 'llave')
+    .replace(/cintra/g, 'cinta')
+    .replace(/[^a-z0-9]+/g, '');
 }
 
 function getFallbackImage(product) {
