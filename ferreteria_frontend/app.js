@@ -186,6 +186,9 @@ function renderProducts() {
     const article = document.createElement('article');
     article.className = `product-card ${product.stock === 0 ? 'out-of-stock' : ''}`;
     article.innerHTML = `
+      <div class="product-image-wrap">
+        <img class="product-image" src="${getProductImage(product)}" alt="${product.name}" loading="lazy">
+      </div>
       <div class="card-header">
         <h3>${product.name}</h3>
       </div>
@@ -202,6 +205,11 @@ function renderProducts() {
       </div>
     `;
 
+    const productImage = article.querySelector('.product-image');
+    productImage.addEventListener('error', () => {
+      productImage.src = getFallbackImage(product);
+    }, { once: true });
+
     const buyButton = article.querySelector('.buy-btn');
     buyButton.addEventListener('click', () => addToCart(product.id));
     productList.appendChild(article);
@@ -215,6 +223,62 @@ function renderProducts() {
   } else {
     adminProductList.innerHTML = '';
   }
+}
+
+function getProductImage(product) {
+  const imageFiles = {
+    'Taladro Bosch': 'Taladro Bosch.jpeg',
+    'Sierra circular': 'Cierra Circular.jpeg',
+    'Martillo de carpintero': 'Martillo de Carpintero.jpeg',
+    'Llave inglesa 10"': 'llava inglesa10.jpeg',
+    'Cinta métrica 5m': 'cintra metrica 5m.jpeg',
+    'Taladro atornillador': 'Taladro Atornillador.jpeg',
+    'Serrucho de metal': 'serrucho de metal.jpeg',
+    'Pintura látex blanco': 'pintura latex blanco.jpeg',
+    'Brocha 4"': 'brocha4.jpeg',
+    'Rodillo 9"': 'Rodillo 9.jpeg',
+    'Lija de grano 120': 'Lija grano 120.jpeg',
+    'Pegamento instantáneo': 'Pegamento Instantaneo.jpeg',
+    'Cemento 25kg': 'cemento25kg.jpeg',
+    'Arena fina 20kg': 'arena fina 20kg.jpeg',
+    'Cable eléctrico 2.5mm': 'Cable electrico2.5.jpeg',
+    'Interruptor simple': 'Interruptor simple.jpeg',
+    'Tubo PVC 1/2"': 'tubo pvc.jpeg',
+    'Llave de paso': 'Llave de paso.jpeg',
+    'Mango para escoba': 'mango para escoba.jpeg',
+    'Escalera de aluminio': 'Escalera aluminio.jpeg',
+    'Pulidora angular': 'pulidora angular.jpeg',
+    'Compresor de aire': 'compresor de aire.jpeg',
+    'Guantes de trabajo': 'Guantes-de-trabajo.jpeg',
+    'Casco de seguridad': 'casco de seguridad.jpeg',
+    'Soldadura eléctrica': 'soldadura electrica.jpeg',
+    'Linterna LED': 'linterna LED.jpeg',
+    'Foco led 12W': 'foco led 12w.jpeg',
+    'Empaque de tornillos': 'empaque de tornillos.jpeg',
+    'Tuerca de acero M8': 'Tuerca de acero m8.jpeg',
+    'Arandela plana': 'arandela plana.jpeg',
+    'Cinturón de herramientas': 'cinturon de herramientas.jpeg',
+    'Set de destornilladores': 'set de destornilladores.jpeg',
+    'Alicate de corte': 'alicate de corte.jpeg',
+    'Soplador de aire': 'soplador de aire.jpeg',
+    'Manguera de jardín': 'Manguera jardin.jpeg',
+    'Boquilla para regadera': 'boquilla regadera.jpeg',
+    'Balde de pintura 20L': 'balde de pintura 20l.jpeg',
+    'Masilla para madera': 'masilla para madera.jpeg',
+    'Sierra de mano': 'sierra de mano.jpeg',
+    'Mécate de nylon': 'mecate de nylon.jpeg'
+  };
+  if (imageFiles[product.name]) {
+    return `./data/product_images/${encodeURIComponent(imageFiles[product.name])}`;
+  }
+  return getFallbackImage(product);
+}
+
+function getFallbackImage(product) {
+  const label = encodeURIComponent(product.name);
+  const category = encodeURIComponent(product.category);
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 500"><rect width="700" height="500" fill="#fff1f2"/><circle cx="350" cy="190" r="112" fill="#fecaca"/><text x="350" y="215" text-anchor="middle" font-size="120">🔧</text><text x="350" y="365" text-anchor="middle" font-family="Arial" font-size="30" font-weight="700" fill="#7f1d1d">${decodeURIComponent(label)}</text><text x="350" y="410" text-anchor="middle" font-family="Arial" font-size="21" fill="#b91c1c">${decodeURIComponent(category)}</text></svg>`;
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 }
 
 function addToCart(productId) {
